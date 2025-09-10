@@ -11,7 +11,10 @@ import { handleReputationButton } from "./src/commands/reputation.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => res.send('Bot is alive!'));
+app.get('/', (req, res) => {
+  console.log(`📡 Ping от UptimeRobot: ${new Date().toISOString()}`);
+  res.send('Bot is alive!');
+});
 app.listen(PORT, () => console.log(`🌐 Express server listening on port ${PORT}`));
 
 const token = process.env.DISCORD_TOKEN;
