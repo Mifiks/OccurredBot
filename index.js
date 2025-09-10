@@ -8,13 +8,11 @@ import { fileURLToPath } from 'url';
 import express from 'express';
 import { handleReputationButton } from "./src/commands/reputation.js";
 
-// ======================= Anti-sleep Express =======================
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => res.send('Bot is alive!'));
 app.listen(PORT, () => console.log(`🌐 Express server listening on port ${PORT}`));
-// =================================================================
 
 const token = process.env.DISCORD_TOKEN;
 if (!token) {
@@ -86,3 +84,21 @@ client.on("interactionCreate", async interaction => {
 });
 
 client.login(token);
+
+setInterval(() => {
+  const used = process.memoryUsage();
+
+  const memMB = Object.fromEntries(
+    Object.entries(used).map(([key, value]) => [key, (value / 1024 / 1024).toFixed(2) + " MB"])
+  );
+
+  const totalMB = (
+    Object.values(used).reduce((acc, val) => acc + val, 0) /
+    1024 /
+    1024
+  ).toFixed(2);
+
+  console.log("🐱 Memory usage:");
+  console.table(memMB);
+  console.log(`📊 Total: ${totalMB} MB\n`);
+}, 60_000);
