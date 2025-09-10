@@ -98,7 +98,7 @@ setInterval(() => {
     1024
   ).toFixed(2);
 
-  console.log("🐱 Memory usage:");
+  console.log("Memory usage:");
   console.table(memMB);
-  console.log(`📊 Total: ${totalMB} MB\n`);
+  console.log(`Total: ${totalMB} MB\n`);
 }, 60_000);
