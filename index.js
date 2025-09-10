@@ -85,20 +85,28 @@ client.on("interactionCreate", async interaction => {
 
 client.login(token);
 
-setInterval(() => {
+setInterval(async () => {
   const used = process.memoryUsage();
 
   const memMB = Object.fromEntries(
-    Object.entries(used).map(([key, value]) => [key, (value / 1024 / 1024).toFixed(2) + " MB"])
+    Object.entries(used).map(([key, value]) => [key, (value / 1024 / 1024).toFixed(2)])
   );
 
-  const totalMB = (
-    Object.values(used).reduce((acc, val) => acc + val, 0) /
-    1024 /
-    1024
-  ).toFixed(2);
+  const totalMB = Object.values(memMB).reduce((acc, val) => acc + parseFloat(val), 0);
 
-  console.log("Memory usage:");
-  console.table(memMB);
-  console.log(`Total: ${totalMB} MB\n`);
+  if (totalMB > 350) {
+    console.log("Memory usage high!");
+    console.table(memMB);
+    console.log(`Total: ${totalMB.toFixed(2)} MB\n`);
+
+    try {
+      const channel = await client.channels.fetch("1404857052085485588");
+      if (channel) {
+        await channel.send(`<@1338940453751623874> ПРЕВЫШЕНО ДОПУСТИМОЕ КОЛИЧЕСТВО ПАМЯТИ: **${totalMB.toFixed(2)} MB**`);
+      }
+    } catch (err) {
+      console.error("Не удалось отправить сообщение о памяти:", err);
+    }
+  }
 }, 60_000);
+
